@@ -1,0 +1,21 @@
+# Xcode & SPM
+.DS_Store
+*/.DS_Store
+.build/
+Packages/
+Package.resolved
+xcuserdata/
+*.xcworkspace/
+*.xcuserdata/
+DerivedData/
+
+# Build outputs
+dist/
+build/
+*.dmg
+*.app
+AppIcon.iconset/
+
+# Temporary logs
+/tmp/jellyfin_remote*
+*.log
