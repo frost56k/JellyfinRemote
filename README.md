@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/macOS-14.0%2B-blue?logo=apple" alt="macOS 14+">
+  <img src="https://img.shields.io/badge/macOS-13.0%2B-blue?logo=apple" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-5.9%2B-orange?logo=swift" alt="Swift">
   <img src="https://img.shields.io/badge/Architecture-Universal%20(Apple%20Silicon%20%2B%20Intel)-purple" alt="Universal">
   <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License">

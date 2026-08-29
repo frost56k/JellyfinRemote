@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "JellyfinRemote",
     platforms: [
-        .macOS(.v14) // Поддержка macOS 14 Sonoma и macOS 15 Sequoia
+        .macOS(.v13)
     ],
     targets: [
         .executableTarget(
