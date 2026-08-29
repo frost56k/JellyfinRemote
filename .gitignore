@@ -19,3 +19,5 @@ AppIcon.iconset/
 # Temporary logs
 /tmp/jellyfin_remote*
 *.log
+# Local documentation (Private)
+docs/
