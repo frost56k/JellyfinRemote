@@ -1,7 +1,7 @@
 # 🍿 Jellyfin Remote for macOS
 
 <p align="center">
-  <img src="Resources/AppIcon.icns" width="128" height="128" alt="Jellyfin Remote Logo">
+  <img src="Resources/AppIcon.png" width="128" height="128" alt="Jellyfin Remote Logo">
 </p>
 
 <p align="center">
@@ -17,42 +17,42 @@
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- 📱 **Zero iPhone Apps Needed:** Works directly in Safari on iOS as a responsive, thumb-friendly web app.
-- 🍿 **macOS Menu Bar Resident:** Runs discreetly in your status bar (`NSStatusItem`) with zero Dock clutter.
-- ⚡️ **Instant QR Pairing:** Built-in QR-code generator to connect your phone in 1 second.
-- ⚙️ **Configurable Port:** Change the port on the fly with live socket restart and port conflict handling.
-- 🎯 **Smart Tab Targeting:** Automatically routes commands to the active Jellyfin tab across multiple Safari windows.
-- 📊 **Bidirectional Status:** Live progress bar, playback timer, and movie title feedback.
-- ⌨️ **Quick Search:** Type search queries with your phone's native keyboard straight into Jellyfin.
-- 🕹 **Thumb-Zone D-Pad:** Navigation optimized for one-handed thumb control.
-- 🪶 **Ultra Lightweight:** Only ~2.6 MB (Zero third-party dependencies, built with pure `Network.framework` & `AppKit`).
+- 📱 **Zero iPhone Apps Needed:** Works directly in mobile Safari with a responsive, haptic-enabled web remote.
+- 🍿 **macOS Menu Bar Resident:** Lives quietly in your menu bar (`NSStatusItem`) with zero Dock clutter.
+- ⚡️ **Instant QR Pairing:** Built-in QR-code generator to pair your iPhone in 1 second.
+- ⚙️ **Configurable Port:** Change HTTP ports on the fly with automatic socket restarting.
+- 🎯 **Smart Safari Tab Targeting:** Automatically locates and controls the active Jellyfin tab across windows.
+- 📊 **Bidirectional Status:** Real-time playback timer, movie title, and progress bar feedback.
+- ⌨️ **Quick Text Search:** Type search queries with your phone's native keyboard directly into Jellyfin.
+- 🕹 **Thumb-Zone D-Pad:** Navigation layout optimized for one-handed thumb control on mobile devices.
+- 🪶 **Ultra Lightweight:** Only ~2.6 MB (Universal Binary for Apple Silicon & Intel Haswell+).
 
 ---
 
-## 🚀 Quick Start & Installation
+## 🚀 Installation & Quick Start
 
 ### Option 1: Download Pre-built DMG
-1. Download the latest `JellyfinRemote-vX.X.X.dmg` from the [Releases](https://github.com/your-username/JellyfinRemote/releases) page.
-2. Open the DMG and drag **JellyfinRemote.app** into your **Applications** folder.
+1. Download the latest `JellyfinRemote-vX.X.X.dmg` from the **[Releases](https://github.com/frost56k/JellyfinRemote/releases)** section.
+2. Open the `.dmg` and drag **JellyfinRemote.app** into your **Applications** folder.
 3. Launch `JellyfinRemote` from Applications.
-4. Click the 🍿 icon in your Menu Bar, select **"Show QR Code"**, and scan it with your iPhone camera.
+4. Click the 🍿 icon in the macOS Menu Bar, select **"Show iPhone QR Code..."**, and scan it with your iPhone camera.
 
-> **Note for macOS Gatekeeper:**
-> Since this open-source build is ad-hoc signed, if macOS blocks launching on first run, run this in Terminal:
+> **macOS Gatekeeper Note:**  
+> If macOS displays a security prompt on first launch, open Terminal and run:
 > ```bash
 > xattr -cr /Applications/JellyfinRemote.app
 > ```
 
 ---
 
-## ⚙️ Prerequisites (Safari Setup on Mac)
+## ⚙️ Safari Setup (One-time prerequisite)
 
-To allow JellyfinRemote to communicate with Safari:
-1. Open **Safari -> Settings -> Advanced** and check **"Show features for web developers"**.
-2. In the menu bar, click **Develop -> Allow JavaScript from Apple Events**.
-3. On first command from your phone, click **Allow** when macOS asks for Automation permissions.
+To enable AppleScript JavaScript dispatching in Safari on macOS:
+1. Open **Safari ➔ Settings (⌘,) ➔ Advanced** and check **"Show features for web developers"**.
+2. In the top Safari menu, click **Develop ➔ Allow JavaScript from Apple Events** (ensure it is checked ✅).
+3. On the first remote command, click **OK** when macOS asks for Automation permissions.
 
 ---
 
@@ -60,17 +60,16 @@ To allow JellyfinRemote to communicate with Safari:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/JellyfinRemote.git
+git clone https://github.com/frost56k/JellyfinRemote.git
 cd JellyfinRemote
 
 # Build standalone .app and .dmg installer
 chmod +x scripts/*.sh
 ./scripts/build_dmg.sh
-
-The output .dmg installer will be located in the dist/ folder.
+The compiled installer will be available at dist/JellyfinRemote-v2.0.0.dmg.
 🏛 Architecture
 code
-Code
+Text
 [ iPhone Safari Web UI ]
           │
           ▼ (HTTP / JSON LAN socket)
@@ -82,7 +81,4 @@ Code
           ▼ (AppleScript / JXA DOM Event Dispatcher)
 [ Safari Browser (Jellyfin Web Client) ]
 📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-code
-Code
----
+Distributed under the MIT License. See LICENSE for more information.
