@@ -1,0 +1,52 @@
+{
+  "": {
+    "dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/JellyfinRemote.d",
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/JellyfinRemote.o",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/master.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/AppDelegate.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/AppDelegate.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/AppDelegate~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/AppDelegate.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/BluetoothRemoteController.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/BluetoothRemoteController.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/BluetoothRemoteController~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/BluetoothRemoteController.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/HTMLContent.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/HTMLContent.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/HTMLContent~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/HTMLContent.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/NetworkUtils.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/NetworkUtils.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/NetworkUtils~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/NetworkUtils.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/QRCodeWindow.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/QRCodeWindow.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/QRCodeWindow~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/QRCodeWindow.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/SafariController.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/SafariController.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/SafariController~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/SafariController.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/SettingsManager.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/SettingsManager.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/SettingsManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/SettingsManager.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/WebServer.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/WebServer.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/WebServer~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/WebServer.swiftdeps"
+  },
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/main.swift": {
+    "object": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/main.swift.o",
+    "swiftmodule": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/frost56k/Projects/JellyfinRemote/.build-universal/arm64/arm64-apple-macosx/release/JellyfinRemote.build/main.swiftdeps"
+  }
+}

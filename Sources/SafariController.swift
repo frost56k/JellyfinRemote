@@ -3,46 +3,55 @@ import CoreGraphics
 import AppKit
 
 public class SafariController {
-    
-    // MARK: - Выполнение JavaScript в целевой вкладке Jellyfin
-    
-    /// Находит вкладку Jellyfin и выполняет в ней JavaScript.
-    /// Если вкладка не найдена, пробует выполнить в активной вкладке Safari (document 1).
+
+    // MARK: - Контекстное выполнение JavaScript в Safari
+
+    /// Выполняет JS в активной вкладке YouTube (если открыта спереди),
+    /// либо в целевой вкладке Jellyfin.
     @discardableResult
     public static func runJS(_ jsCode: String) -> String? {
         let escapedJS = jsCode
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "\"", with: "\\\"")
-        
+
         let scriptSource = """
         tell application "Safari"
             if (count of windows) = 0 then return "no_windows"
-            
+
+            -- 1. Если текущая активная вкладка — это YouTube, выполняем прямо в ней
+            try
+                set curUrl to (URL of current tab of front window) as string
+                if curUrl contains "youtube.com" then
+                    return do JavaScript "\(escapedJS)" in current tab of front window
+                end if
+            end try
+
+            -- 2. Иначе ищем вкладку Jellyfin по URL или портам
             set targetTab to missing value
-            set targetWin to missing value
-            
-            -- Поиск вкладки Jellyfin по URL или порту
             repeat with w in windows
                 repeat with t in tabs of w
                     set tabUrl to (URL of t) as string
                     if tabUrl contains "jellyfin" or tabUrl contains ":8096" or tabUrl contains ":8088" or tabUrl contains ":8097" then
                         set targetTab to t
-                        set targetWin to w
                         exit repeat
                     end if
                 end repeat
                 if targetTab is not missing value then exit repeat
             end repeat
-            
-            -- Выполняем скрипт в найденной вкладке либо в активном документе
+
             if targetTab is not missing value then
                 return do JavaScript "\(escapedJS)" in targetTab
             else
-                return do JavaScript "\(escapedJS)" in document 1
+                -- Резерв: пробуем выполнить в активной вкладке
+                try
+                    return do JavaScript "\(escapedJS)" in current tab of front window
+                on error
+                    return "no_matching_tab"
+                end try
             end if
         end tell
         """
-        
+
         var error: NSDictionary?
         if let script = NSAppleScript(source: scriptSource) {
             let output = script.executeAndReturnError(&error)
@@ -50,11 +59,33 @@ public class SafariController {
                 print("❌ Ошибка AppleScript: \(err)")
                 return nil
             }
-            return output.stringValue
+            let value = output.stringValue
+            return (value == "no_windows" || value == "no_matching_tab") ? nil : value
         }
         return nil
     }
-    
+
+    /// Проверяет, активен ли сейчас YouTube на переднем плане
+    public static func isYouTubeFrontmost() -> Bool {
+        let scriptSource = """
+        tell application "Safari"
+            if (count of windows) = 0 then return false
+            try
+                set curUrl to (URL of current tab of front window) as string
+                return curUrl contains "youtube.com"
+            on error
+                return false
+            end try
+        end tell
+        """
+        if let script = NSAppleScript(source: scriptSource) {
+            var error: NSDictionary?
+            let out = script.executeAndReturnError(&error)
+            return out.booleanValue
+        }
+        return false
+    }
+
     /// Выводит Safari и вкладку Jellyfin на передний план
     public static func activateSafari() {
         let scriptSource = """
@@ -63,7 +94,7 @@ public class SafariController {
             repeat with w in windows
                 repeat with t in tabs of w
                     set tabUrl to (URL of t) as string
-                    if tabUrl contains "jellyfin" or tabUrl contains ":8096" or tabUrl contains ":8088" then
+                    if tabUrl contains "jellyfin" or tabUrl contains ":8096" or tabUrl contains ":8088" or tabUrl contains ":8097" then
                         set current tab of w to t
                         set index of w to 1
                         return
@@ -77,9 +108,9 @@ public class SafariController {
             script.executeAndReturnError(&error)
         }
     }
-    
-    // MARK: - Smart TV Режим & Авто-фокус
-    
+
+    // MARK: - Smart TV Режим & Авто-фокус (Jellyfin)
+
     public static func ensureFocusAndTVMode() {
         let js = """
         (function(){
@@ -97,26 +128,25 @@ public class SafariController {
     }
 
     // MARK: - Системные макросы Safari
-    
+
     @discardableResult
     public static func reloadPage() -> String? {
         return runJS("location.reload(); 'reloaded';")
     }
-    
+
     // MARK: - Управление Плеером (Playback & Status)
-    
-    /// Получение статуса плеера в формате JSON
+
     public static func getPlaybackStatus() -> String {
         let js = """
         (function(){
             const v = document.querySelector('video');
             const titleEl = document.querySelector('.pageTitle, .headerItemTitle, .videoTitle, .itemTitle');
             const title = titleEl ? titleEl.innerText : document.title;
-            
+
             if (!v) {
                 return JSON.stringify({
                     hasVideo: false,
-                    title: title || 'Jellyfin',
+                    title: title || 'Jellyfin / YouTube',
                     isPlaying: false,
                     currentTime: 0,
                     duration: 0,
@@ -124,7 +154,7 @@ public class SafariController {
                     muted: false
                 });
             }
-            
+
             return JSON.stringify({
                 hasVideo: true,
                 title: title || 'Воспроизведение',
@@ -138,9 +168,15 @@ public class SafariController {
         """
         return runJS(js) ?? "{\"hasVideo\":false}"
     }
-    
+
     @discardableResult
     public static func togglePlayPause() -> String? {
+        if isYouTubeFrontmost() {
+            // Для YouTube TV шлем нативный пробел через System Events
+            sendSystemKey(code: KeyCode.space)
+            return "toggled"
+        }
+
         let js = """
         (function(){
             const v = document.querySelector('video');
@@ -151,7 +187,7 @@ public class SafariController {
         """
         return runJS(js)
     }
-    
+
     @discardableResult
     public static func seek(by seconds: Double) -> String? {
         let js = """
@@ -164,7 +200,7 @@ public class SafariController {
         """
         return runJS(js)
     }
-    
+
     @discardableResult
     public static func toggleFullscreen() -> String? {
         let js = """
@@ -182,9 +218,9 @@ public class SafariController {
         """
         return runJS(js)
     }
-    
-    // MARK: - Громкость
-    
+
+    // MARK: - Громкость (с защитой от сброса рекламой YouTube)
+
     @discardableResult
     public static func toggleMute() -> String? {
         let js = """
@@ -197,37 +233,60 @@ public class SafariController {
         """
         return runJS(js)
     }
-    
+
     @discardableResult
     public static func changeVolume(by delta: Double) -> String? {
+        // Устанавливаем громкость и вешаем хук сохранения (anti-ad reset)
         let js = """
         (function(){
             const v = document.querySelector('video');
             if (!v) return 'No video';
-            v.volume = Math.min(1, Math.max(0, v.volume + (\(delta))));
-            return 'vol: ' + Math.round(v.volume * 100) + '%';
+
+            let cur = (typeof window.__targetVol === 'number') ? window.__targetVol : v.volume;
+            let next = Math.min(1, Math.max(0, cur + (\(delta))));
+            window.__targetVol = next;
+            v.volume = next;
+
+            // Вешаем хук защиты от сброса рекламой (один раз)
+            if (!window.__volHookInstalled) {
+                window.__volHookInstalled = true;
+                setInterval(function(){
+                    const vid = document.querySelector('video');
+                    if (vid && typeof window.__targetVol === 'number') {
+                        if (Math.abs(vid.volume - window.__targetVol) > 0.04) {
+                            vid.volume = window.__targetVol;
+                        }
+                    }
+                }, 800);
+            }
+
+            return 'vol: ' + Math.round(next * 100) + '%';
         })()
         """
         return runJS(js)
     }
-    
+
     // MARK: - Макросы Навигации
-    
+
     public static func goHome() {
+        if isYouTubeFrontmost() {
+            sendSystemKey(code: KeyCode.escape)
+            return
+        }
         runJS("window.location.hash = '#/home.html';")
         ensureFocusAndTVMode()
     }
-    
+
     public static func goMovies() {
         runJS("window.location.hash = '#/movies.html';")
         ensureFocusAndTVMode()
     }
-    
+
     public static func goSeries() {
         runJS("window.location.hash = '#/tv.html';")
         ensureFocusAndTVMode()
     }
-    
+
     public static func focusSearch() {
         let js = """
         (function(){
@@ -241,14 +300,13 @@ public class SafariController {
         runJS(js)
         ensureFocusAndTVMode()
     }
-    
-    /// Ввод произвольного поискового текста с клавиатуры телефона
+
     @discardableResult
     public static func typeSearchText(_ text: String) -> String? {
         let escaped = text
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "\"", with: "\\\"")
-        
+
         let js = """
         (function(){
             if (!window.location.hash.includes('search.html')) {
@@ -267,13 +325,34 @@ public class SafariController {
         """
         return runJS(js)
     }
-    
+
     // MARK: - D-Pad Навигация
-    
+
+    /// Отправляет системный key code через System Events (идеально для YouTube TV)
+    public static func sendSystemKey(code: CGKeyCode) {
+        let scriptSource = """
+        tell application "Safari" to activate
+        tell application "System Events"
+            key code \(code)
+        end tell
+        """
+        if let script = NSAppleScript(source: scriptSource) {
+            var error: NSDictionary?
+            script.executeAndReturnError(&error)
+        }
+    }
+
     public static func sendKey(code: CGKeyCode) {
+        // Если открыт YouTube TV — используем нативный System Events key code
+        if isYouTubeFrontmost() {
+            sendSystemKey(code: code)
+            return
+        }
+
+        // Для Jellyfin используем проверенную эмуляцию KeyboardEvent
         var jsKey = ""
         var jsKeyCode = 0
-        
+
         switch code {
         case KeyCode.up: jsKey = "ArrowUp"; jsKeyCode = 38
         case KeyCode.down: jsKey = "ArrowDown"; jsKeyCode = 40
@@ -283,17 +362,17 @@ public class SafariController {
         case KeyCode.escape: jsKey = "Escape"; jsKeyCode = 27
         default: break
         }
-        
+
         if !jsKey.isEmpty {
             let js = """
             (function(){
                 const target = document.activeElement || document.body || document;
-                
+
                 if ('\(jsKey)' === 'Enter' && target && typeof target.click === 'function' && target !== document.body) {
                     target.click();
                     return;
                 }
-                
+
                 const eDown = new KeyboardEvent('keydown', {
                     key: '\(jsKey)', code: '\(jsKey)', keyCode: \(jsKeyCode), which: \(jsKeyCode),
                     bubbles: true, cancelable: true
@@ -302,7 +381,7 @@ public class SafariController {
                     key: '\(jsKey)', code: '\(jsKey)', keyCode: \(jsKeyCode), which: \(jsKeyCode),
                     bubbles: true, cancelable: true
                 });
-                
+
                 target.dispatchEvent(eDown);
                 target.dispatchEvent(eUp);
             })()
@@ -310,7 +389,7 @@ public class SafariController {
             runJS(js)
         }
     }
-    
+
     public enum KeyCode {
         public static let up: CGKeyCode = 126
         public static let down: CGKeyCode = 125
@@ -319,5 +398,49 @@ public class SafariController {
         public static let enter: CGKeyCode = 36
         public static let escape: CGKeyCode = 53
         public static let space: CGKeyCode = 49
+    }
+
+    // MARK: - Переключение и открытие сервисов (YouTube / Jellyfin)
+
+    public static func openOrSwitchTab(url: String, matchPattern: String) {
+        let scriptSource = """
+        tell application "Safari"
+            activate
+            set found to false
+            repeat with w in windows
+                repeat with t in tabs of w
+                    set tabUrl to (URL of t) as string
+                    if tabUrl contains "\(matchPattern)" then
+                        set current tab of w to t
+                        set index of w to 1
+                        set found to true
+                        exit repeat
+                    end if
+                end repeat
+                if found then exit repeat
+            end repeat
+            if not found then
+                if (count of windows) = 0 then
+                    make new document with properties {URL:"\(url)"}
+                else
+                    tell front window
+                        set current tab to (make new tab with properties {URL:"\(url)"})
+                    end tell
+                end if
+            end if
+        end tell
+        """
+        var error: NSDictionary?
+        if let script = NSAppleScript(source: scriptSource) {
+            script.executeAndReturnError(&error)
+        }
+    }
+
+    public static func openYouTube() {
+        openOrSwitchTab(url: "https://www.youtube.com/tv#/", matchPattern: "youtube.com")
+    }
+
+    public static func openJellyfin() {
+        openOrSwitchTab(url: "http://192.168.100.7:8096/web/", matchPattern: "8096")
     }
 }

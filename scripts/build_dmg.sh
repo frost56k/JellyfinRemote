@@ -11,10 +11,7 @@ DMG_FINAL_PATH="${DIST_DIR}/${DMG_NAME}"
 STAGING_DIR="${DIST_DIR}/dmg_staging"
 
 # 1. Проверяем наличие .app или собираем его
-if [ ! -d "${APP_BUNDLE}" ]; then
-    echo "⚙️ .app бандл не найден. Запускаем сборку..."
-    bash "${PROJECT_DIR}/scripts/build_app.sh"
-fi
+"$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/build_app.sh"
 
 echo "💽 [1/3] Подготовка содержимого DMG инсталлятора..."
 rm -rf "${STAGING_DIR}" "${DMG_FINAL_PATH}"

@@ -5,11 +5,17 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusMenuItem: NSMenuItem!
     private var urlMenuItem: NSMenuItem!
     private var launchAtLoginMenuItem: NSMenuItem!
+    private var bluetoothRemoteMenuItem: NSMenuItem!
+    private var bluetoothRemoteStatusItem: NSMenuItem!
     
     public func applicationDidFinishLaunching(_ notification: Notification) {
         setupMenuBar()
         setupServerCallbacks()
         WebServer.shared.start()
+        BluetoothRemoteController.shared.onStateChange = { [weak self] state in
+            DispatchQueue.main.async { self?.updateBluetoothRemoteState(state) }
+        }
+        if SettingsManager.shared.bluetoothRemoteEnabled { BluetoothRemoteController.shared.start() }
     }
     
     private func setupMenuBar() {
@@ -35,6 +41,13 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         urlMenuItem = NSMenuItem(title: "🌐 Address: Resolving...", action: nil, keyEquivalent: "")
         urlMenuItem.isEnabled = false
         menu.addItem(urlMenuItem)
+
+        bluetoothRemoteStatusItem = NSMenuItem(title: "Пульт Bluetooth: выключен", action: nil, keyEquivalent: "")
+        bluetoothRemoteStatusItem.isEnabled = false
+        menu.addItem(bluetoothRemoteStatusItem)
+        bluetoothRemoteMenuItem = NSMenuItem(title: "Включить пульт Bluetooth", action: #selector(toggleBluetoothRemote), keyEquivalent: "")
+        bluetoothRemoteMenuItem.target = self
+        menu.addItem(bluetoothRemoteMenuItem)
         
         menu.addItem(NSMenuItem.separator())
         
@@ -128,7 +141,34 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         launchAtLoginMenuItem.state = isEnabled ? .on : .off
     }
     
+    @objc private func toggleBluetoothRemote() {
+        let settings = SettingsManager.shared
+        if settings.bluetoothRemoteEnabled {
+            settings.bluetoothRemoteEnabled = false
+            BluetoothRemoteController.shared.stop()
+            bluetoothRemoteMenuItem.title = "Включить пульт Bluetooth"
+            return
+        }
+        settings.bluetoothRemoteEnabled = true
+        bluetoothRemoteMenuItem.title = "Выключить пульт Bluetooth"
+        guard BluetoothRemoteController.shared.requestPermission() else {
+            bluetoothRemoteStatusItem.title = "Пульт Bluetooth: запросите/разрешите мониторинг ввода в Настройках системы"
+            BluetoothRemoteController.shared.start()
+            return
+        }
+        BluetoothRemoteController.shared.start()
+    }
+    
+    private func updateBluetoothRemoteState(_ state: BluetoothRemoteController.State) {
+        bluetoothRemoteStatusItem?.title = state.menuTitle
+    }
+    
+    public func applicationWillTerminate(_ notification: Notification) {
+        BluetoothRemoteController.shared.stop()
+    }
+    
     @objc private func quitApp() {
+        BluetoothRemoteController.shared.stop()
         WebServer.shared.stop()
         NSApplication.shared.terminate(nil)
     }

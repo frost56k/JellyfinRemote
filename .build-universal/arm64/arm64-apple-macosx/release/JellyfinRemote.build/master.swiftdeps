@@ -1,0 +1,14 @@
+version: "Apple Swift version 6.0.3 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)"
+options: "b9ee6df2b9a705a75e6f1f2cc8894a873c8e8f479080f6294141b351f908c15a"
+build_start_time: [1793548768, 745050000]
+build_end_time: [1793548770, 376233000]
+inputs:
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/AppDelegate.swift": [1793297701, 346346821]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/BluetoothRemoteController.swift": [1793545528, 563511145]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/HTMLContent.swift": [1793545628, 53589689]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/NetworkUtils.swift": [1788005162, 194143905]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/QRCodeWindow.swift": [1788008618, 10889245]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/SafariController.swift": [1793548756, 653248501]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/SettingsManager.swift": [1793297701, 345194149]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/WebServer.swift": [1793545756, 878700404]
+  "/Users/frost56k/Projects/JellyfinRemote/Sources/main.swift": [1788005054, 797470680]

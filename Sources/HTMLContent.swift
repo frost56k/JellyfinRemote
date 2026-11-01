@@ -161,6 +161,9 @@ public struct HTMLContent {
                 <button class="btn btn-playback" onclick="send('seek_backward')">⏮ -10s</button>
                 <button class="btn btn-playback" onclick="send('mute')">🔇 Mute</button>
                 <button class="btn btn-playback" onclick="send('seek_forward')">+10s ⏭</button>
+                <button class="btn btn-playback" onclick="send('vol_down')">🔉 Vol -</button>
+                <button class="btn btn-playback" onclick="send('vol_up')">🔊 Vol +</button>
+                <button class="btn btn-playback" onclick="send('enter')">🆗 OK</button>
             </div>
             
             <!-- Quick Search Input -->

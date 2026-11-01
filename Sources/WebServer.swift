@@ -121,18 +121,14 @@ public final class WebServer: @unchecked Sendable {
             resultMessage = SafariController.reloadPage() ?? "reloaded"
         case "play_pause":
             resultMessage = SafariController.togglePlayPause() ?? "error"
-        case "seek_forward":
-            resultMessage = SafariController.seek(by: 10) ?? "error"
-        case "seek_backward":
-            resultMessage = SafariController.seek(by: -10) ?? "error"
         case "fullscreen":
             resultMessage = SafariController.toggleFullscreen() ?? "error"
         case "mute":
             resultMessage = SafariController.toggleMute() ?? "error"
         case "vol_up":
-            resultMessage = SafariController.changeVolume(by: 0.1) ?? "error"
+            resultMessage = SafariController.changeVolume(by: 0.05) ?? "error"
         case "vol_down":
-            resultMessage = SafariController.changeVolume(by: -0.1) ?? "error"
+            resultMessage = SafariController.changeVolume(by: -0.05) ?? "error"
         case "home":
             SafariController.goHome()
             resultMessage = "Navigated Home"

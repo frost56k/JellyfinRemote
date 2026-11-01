@@ -7,6 +7,11 @@ public final class SettingsManager {
     private let portKey = "server_custom_port"
     private let defaultPort: UInt16 = 9999
     
+    public var bluetoothRemoteEnabled: Bool {
+        get { UserDefaults.standard.bool(forKey: "bluetoothRemoteEnabled") }
+        set { UserDefaults.standard.set(newValue, forKey: "bluetoothRemoteEnabled") }
+    }
+    
     private init() {}
     
     /// Текущий настроенный порт
